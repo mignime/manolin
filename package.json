@@ -1,0 +1,34 @@
+{
+  "name": "formulario",
+  "version": "0.0.0",
+  "description": "flujoBasico",
+  "main": "server.js",
+  "dependencies": {
+    "express": "~3.4.8",
+    "http": "0.0.0",
+    "mongodb": "~1.3.23",
+    "jade": "~1.1.5",
+    "logfmt": "~0.21.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mignime/manolin.git"
+  },
+  "keywords": [
+    "form"
+  ],
+  "author": "mignime",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mignime/manolin/issues"
+  },
+  "homepage": "https://github.com/mignime/manolin"
+  "engines": {
+    "node": "0.10.x"
+  }
+}
