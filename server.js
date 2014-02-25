@@ -15,20 +15,6 @@ app.configure(function() {
   app.use(express.static(__dirname + '/public'));
 });
 
-dbTest.open(function (error, client) {
-  if (error) throw error;
- 
-  //en el parámetro client recibimos el cliente para comenzar a hacer llamadas
-  //este parámetro sería lo mismo que hicimos por consola al llamar a mongo
-  var collection = new mongodb.Collection(client, 'tanque');
-   
-  collection.find({},{clave:1, _id:0}).toArray(function(err, docs) {
-
-  //imprimimos en la consola el resultado
-    console.dir(docs);
-  });
-  dbTest.close();
-}); 
 //- See more at: http://fernetjs.com/2012/08/buenos-amigos-nodejs-mongodb/#sthash.UuGDGxaJ.dpuf
 
 app.post('/obtenTanques', function(req, res){

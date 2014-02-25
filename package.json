@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/mignime/manolin/issues"
   },
-  "homepage": "https://github.com/mignime/manolin"
+  "homepage": "https://github.com/mignime/manolin",
   "engines": {
     "node": "0.10.x"
   }
