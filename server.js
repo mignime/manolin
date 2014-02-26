@@ -15,7 +15,7 @@ app.use(express.json());
 app.configure(function() {
   app.use(express.static(__dirname + '/public'));
 });
-
+console.log("TEST COMMENT");
 //- See more at: http://fernetjs.com/2012/08/buenos-amigos-nodejs-mongodb/#sthash.UuGDGxaJ.dpuf
 
 app.post('/obtenTanques', function(req, res){
