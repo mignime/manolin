@@ -11,7 +11,7 @@ app.set('view engine', 'jade');
 app.set("view options", { layout: false })
 app.use(express.urlencoded());
 app.use(express.json());
-
+console.log("PORTOORO ",process.env.PORT);
 app.configure(function() {
   app.use(express.static(__dirname + '/public'));
 });
@@ -134,4 +134,4 @@ app.get('/', function(req, res){
       res.end('<html><head><title>404 - Not found</title></head><body><h1>Not found.</h1></body></html>');
       console.log("[404] " + req.method + " to " + req.url);
   };
-}).listen(8000)
+}).listen(process.env.PORT)
