@@ -131,4 +131,4 @@ app.get('/', function(req, res){
       res.end('<html><head><title>404 - Not found</title></head><body><h1>Not found.</h1></body></html>');
       console.log("[404] " + req.method + " to " + req.url);
   };
-}).listen()
+}).listen(appPort)
