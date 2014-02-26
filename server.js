@@ -35,13 +35,14 @@ app.post('/obtenTanques', function(req, res){
       res.docs;
       //dbTest.close();
     });
-  }); }); 
+  }); 
+   }); 
 });
 app.post('/descripcionTanque', function(req, res){
-  dbTest.open(function (error, client) {
-    if (error) throw error;
-    console.log("---::::::::::::--- ",req.body);
-    var collection = new mongodb.Collection(client, 'tanque');
+  mongodb.Db.connect(mongoUri, function (err, db) {
+     if (err) throw err;
+     db.collection('tanque', function(er,collection) {
+      if (er) throw er;
     var descTanque = req.body.clave;
     collection.find({clave:descTanque},{_id:0}).toArray(function(err, docs) {
       console.log("LOSTANQWS ",docs);
@@ -54,11 +55,13 @@ app.post('/descripcionTanque', function(req, res){
     });
   }); 
 });
+  });
 
 app.post('/precioTanque', function(req, res){
-  dbTest.open(function (error, client) {
-    if (error) throw error;
-    var collection = new mongodb.Collection(client, 'precios');
+  mongodb.Db.connect(mongoUri, function (err, db) {
+     if (err) throw err;
+     db.collection('precios', function(er,collection) {
+      if (er) throw er;
     var clavePrecio = req.body.clavePrecio;
     collection.find({clave:clavePrecio},{_id:0,clave:0}).toArray(function(err, precio) {
       console.log("PRECIOS ",precio);
@@ -71,6 +74,7 @@ app.post('/precioTanque', function(req, res){
     });
   }); 
 });
+  });
 
 app.post('/signup', function(req, res){
   console.log("[200] " + req.method + " to " + req.url);
