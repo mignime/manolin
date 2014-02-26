@@ -2,9 +2,10 @@ var http = require('http');
 var express = require('express'), app = express();
 var jade = require('jade');
 var mongodb = require('mongodb');
-var server = new mongodb.Server("127.0.0.1", 27017, {}); //fernetjs.com/2012/08/buenos-amigos-nodejs-mongodb/#sthash.UuGDGxaJ.dpuf
-var dbTest = new mongodb.Db('gasManolo', server, {}) //fernetjs.com/2012/08/buenos-amigos-nodejs-mongodb/#sthash.UuGDGxaJ.dpuf
-server = http.createServer(app)
+//var server = new mongodb.Server("ds033059.mongolab.com", 33059, {}); //fernetjs.com/2012/08/buenos-amigos-nodejs-mongodb/#sthash.UuGDGxaJ.dpuf
+//var dbTest = new mongodb.Db('heroku_app22533270', server, {}) //fernetjs.com/2012/08/buenos-amigos-nodejs-mongodb/#sthash.UuGDGxaJ.dpuf
+//server = http.createServer(app)
+var mongoUri = process.env.MONGOLAB_URI;
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.set("view options", { layout: false })
@@ -18,10 +19,15 @@ app.configure(function() {
 //- See more at: http://fernetjs.com/2012/08/buenos-amigos-nodejs-mongodb/#sthash.UuGDGxaJ.dpuf
 
 app.post('/obtenTanques', function(req, res){
-  dbTest.open(function (error, client) {
-    if (error) throw error;
-    var collection = new mongodb.Collection(client, 'tanque');
-     
+  //dbTest.open(function (error, client) {
+    //if (error) throw error;
+    //var collection = new mongodb.Collection(client, 'tanque');
+    mongodb.Db.connect(mongoUri, function (err, db) {
+     console.log("ERRORURIRE33 ",err);
+     if (err) throw err;
+     db.collection('tanque', function(er,collection) {
+      console.log("ERRORURIRE ",er);
+      if (er) throw er;
     collection.find({},{clave:1, _id:0}).toArray(function(err, docs) {
       console.log("LOSTANQWS ",docs);
       //res.writeHead(200, "OK", {'Content-Type': 'application/json'});
@@ -29,9 +35,9 @@ app.post('/obtenTanques', function(req, res){
       //res.end();
     //imprimimos en la consola el resultado
       res.docs;
-      dbTest.close();
+      //dbTest.close();
     });
-  }); 
+  }); });
 });
 app.post('/descripcionTanque', function(req, res){
   dbTest.open(function (error, client) {
