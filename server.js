@@ -23,7 +23,7 @@ app.post('/obtenTanques', function(req, res){
   //dbTest.open(function (error, client) {
     //if (error) throw error;
     //var collection = new mongodb.Collection(client, 'tanque');
-   /* mongodb.Db.connect(mongoUri, function (err, db) {
+    mongodb.Db.connect(mongoUri, function (err, db) {
      console.log("ERRORURIRE33 ",err);
      if (err) throw err;
      db.collection('tanque', function(er,collection) {
@@ -38,7 +38,7 @@ app.post('/obtenTanques', function(req, res){
       res.docs;
       //dbTest.close();
     });
-  }); }); */
+  }); }); 
 });
 app.post('/descripcionTanque', function(req, res){
   dbTest.open(function (error, client) {
