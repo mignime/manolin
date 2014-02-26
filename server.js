@@ -5,13 +5,13 @@ var mongodb = require('mongodb');
 //var server = new mongodb.Server("ds033059.mongolab.com", 33059, {}); //fernetjs.com/2012/08/buenos-amigos-nodejs-mongodb/#sthash.UuGDGxaJ.dpuf
 //var dbTest = new mongodb.Db('heroku_app22533270', server, {}) //fernetjs.com/2012/08/buenos-amigos-nodejs-mongodb/#sthash.UuGDGxaJ.dpuf
 //server = http.createServer(app)
-var mongoUri = process.env.MONGOLAB_URI;
+var mongoUri = "mongodb://mingo:mingo@ds033059.mongolab.com:33059/heroku_app22533270";
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.set("view options", { layout: false })
 app.use(express.urlencoded());
 app.use(express.json());
-
+console.log("MONGO URI ",process.env.MONGOLAB_URI);
 app.configure(function() {
   app.use(express.static(__dirname + '/public'));
 });
