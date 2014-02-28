@@ -50,7 +50,7 @@ function initEvents(){
 		gasto.show();
 	});
 	lecturaFinal.change(function(){
-		var litrosSurtidos = ($(this).val() * tanqueSeleccionado.capacidad)/100;
+		var litrosSurtidos = (($(this).val()-$(".lecturaActual").val()) * tanqueSeleccionado.capacidad)/100;
 		var subtotal = litrosSurtidos * precioTanque.precio;
 		var iva = subtotal * .15;
 		var total = subtotal + iva
