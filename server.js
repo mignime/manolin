@@ -33,6 +33,7 @@ app.post('/obtenTanques', function(req, res){
       //res.end();
     //imprimimos en la consola el resultado
       res.docs;
+      db.close();
       //dbTest.close();
     });
   }); 
@@ -51,6 +52,7 @@ app.post('/descripcionTanque', function(req, res){
       //res.end();
     //imprimimos en la consola el resultado
       res.docs;
+      db.close();
       //dbTest.close();
     });
   }); 
@@ -70,6 +72,7 @@ app.post('/precioTanque', function(req, res){
       //res.end();
     //imprimimos en la consola el resultado
       res.precio;
+      db.close();
       //dbTest.close();
     });
   }); 

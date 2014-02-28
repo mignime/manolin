@@ -3,20 +3,22 @@ html
 	head
 		title Chat
 		link(rel="stylesheet", href="styles/style.css")
+		link(rel="stylesheet", href="styles/chosen.css")
 		link(rel='shortcut icon' type='image/png' href='/favicon.png')
 		script(src='http://code.jquery.com/jquery-1.7.1.min.js')
 		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
+		script(src="/scripts/chosen.jquery.js")
 		script(src="/scripts/script.js")
 	body
 	div#wrapAll
-		p Seleccionar tanque
+		div.titulo Seleccionar tanque
 		select#tanqueSelect
 		div#informacion
 			span Ultima recarga
 			span#ultimaRecLts.datos
 			span#ultimaRecPct.datos
 		div#capturaDatos
-			span#lecturaActual Lectura Actual 
+			label.inputaLabel Lectura Actual 
 			input.entradaDatos.lecturaActual.respuestas(type='text', placeholder='XXX%', name='lectActual')
 		div#gasto
 			span Litros Consumidos
@@ -26,7 +28,7 @@ html
 			span Debe quedar
 			span#debeQuedar
 		datos#calculoRecarga
-			span#lecturaFinal Lectura Final 
+			label.inputaLabel Lectura Final 
 			input.entradaDatos.lecturaFinal.respuestas(type='text', placeholder='XXX%', name='lectFinal')
 			div#calculoSurtido
 				span Litros surtidos

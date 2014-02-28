@@ -66,11 +66,12 @@ function initEvents(){
 function llenaCombo(){
 	comboTanques.empty();
 	$.post("/obtenTanques", function(datos){
-		comboTanques.append("<option value='-1'>--Seleccione--</option>");
+		comboTanques.append("<option value='-1'>----</option>");
 		$.each(datos,function(idx, tanq){
 			comboTanques.append("<option value='"+tanq.clave+"'>"+tanq.clave+"</option>");
 			console.debug("TANQUE ",tanq);
 		});
+		$("#tanqueSelect").chosen({width: "100%"});
 	});
 }
 
