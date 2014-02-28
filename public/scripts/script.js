@@ -28,7 +28,13 @@ $(function() {
 });
 
 function initEvents(){
+	lecturaFinal.attr('disabled',true);
 	comboTanques.change(function(){
+		lecturaFinal.attr('disabled',true);
+		calculoSurtido.hide();
+		gasto.hide();
+		lecturaActual.val("");
+		lecturaFinal.val("");
 		$.post("/descripcionTanque", {"clave":$(this).val()} ,function(datos){
 			tanqueSeleccionado = datos[0];
 			var porcentaje = (tanqueSeleccionado.ultimaCarga * 100)/tanqueSeleccionado.capacidad;
@@ -48,6 +54,7 @@ function initEvents(){
 		$("#ltsRestantes").text(" "+restantes+" lts.");
 		$("#debeQuedar").text(" "+tanqueSeleccionado.debeQuedar+" %");
 		gasto.show();
+		lecturaFinal.attr('disabled',false);
 	});
 	lecturaFinal.change(function(){
 		var litrosSurtidos = (($(this).val()-$(".lecturaActual").val()) * tanqueSeleccionado.capacidad)/100;
