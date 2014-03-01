@@ -15,10 +15,12 @@ var myself;
 var tanqueSeleccionado;
 var precioTanque;
 var $messagesActive;
-var comboTanques, lecturaActual, gasto, calculoSurtido;
+var comboTanques, comboMedidores, vistaTanque, vistaMedidor, lecturaActual, gasto, calculoSurtido;
 // Init
 $(function() {
+	vistaMedidor = $("#vistaMedidor"); //vistaMedidor.hide();
 	comboTanques = $("#tanqueSelect");
+	comboMedidores = $("#medidorSelect");
 	lecturaActual = $(".lecturaActual");
 	lecturaFinal = $(".lecturaFinal");
 	calculoSurtido = $("#calculoSurtido"); calculoSurtido.hide();
@@ -29,7 +31,9 @@ $(function() {
 
 function initEvents(){
 	lecturaFinal.attr('disabled',true);
+	comboMedidores.chosen({width: "100%"});
 	comboTanques.change(function(){
+		llenaMedidores();
 		lecturaFinal.attr('disabled',true);
 		calculoSurtido.hide();
 		gasto.hide();
@@ -67,6 +71,17 @@ function initEvents(){
 		$("#iva").text(" $ "+iva+" ");
 		$("#total").text(" $ "+total+" ");
 		calculoSurtido.show();
+	});
+}
+
+function llenaMedidores() {
+	comboMedidores.empty();
+	$.post('/obtenMedidores', {"claveTanque":comboTanques.val()},function(meds){
+		comboMedidores.append("<option value='-1'>----</option>");
+		$.each(meds,function(idx, med){
+			comboMedidores.append("<option value='"+med.clave+"'>"+med.clave+"</option>");
+		});
+		comboMedidores.trigger("chosen:updated");
 	});
 }
 

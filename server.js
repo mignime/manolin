@@ -79,6 +79,20 @@ app.post('/precioTanque', function(req, res){
 });
   });
 
+app.post('/obtenMedidores', function(req, res){
+  mongodb.Db.connect(mongoUri, function(er, db){
+    if (er) throw er;
+    db.collection('medidor', function(err, collection){
+      if (err) throw err;
+      var claveTanque = req.body.claveTanque;
+      collection.find({"claveTanque":claveTanque},{_id:0,"claveTanque":0}).toArray(function(ero, medidores){
+        res.send(medidores);
+        db.close();
+      });
+    });
+  });
+});
+
 app.post('/signup', function(req, res){
   console.log("[200] " + req.method + " to " + req.url);
               
