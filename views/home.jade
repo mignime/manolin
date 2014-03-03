@@ -5,7 +5,7 @@ html
 		link(rel="stylesheet", href="styles/style.css")
 		link(rel="stylesheet", href="styles/chosen.css")
 		link(rel='shortcut icon' type='image/png' href='/favicon.png')
-		script(src='http://code.jquery.com/jquery-1.7.1.min.js')
+		script(src='http://code.jquery.com/jquery-1.11.0.min.js')
 		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
 		script(src="/scripts/chosen.jquery.js")
 		script(src="/scripts/script.js")
@@ -43,5 +43,9 @@ html
 					label Total
 					span#total
 		div#vistaMedidor.vista
-			div.titulo Seleccionar medidor
-			select#medidorSelect
+			div.titulo Medidores
+			div#medidores
+			div#totalMedidores
+				label#totalLitrosMedidores Litros usados: 
+				span#totalLitros
+

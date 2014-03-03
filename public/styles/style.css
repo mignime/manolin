@@ -2,8 +2,9 @@ html,body{margin:0;padding:0;font-family:Helvetica}
 p,li,div,input,label,a,ul{margin:0;padding:0}
 body{background:url("../bg.png") repeat}
 span{font-weight:bold;color:#444;margin-left:10px}
+div#medidores{margin-top:65px}
 div.vista{width:350px;float:left}
-div.titulo{font-size:22px;font-weight:bold;color:#444}
+div.titulo{font-size:22px;font-weight:bold;color:#444;text-align:center}
 label{display:block}
 label.inputLabel{font-weight:bold;background:linear-gradient(#f1f1f1,#e2e2e2);padding:5px 10px;color:#444;border:1px solid #d4d4d4;border-right:0;border-bottom-left-radius:5px;border-top-left-radius:5px;line-height:1.5em;width:250px;float:left}
 input.entradaDatos{width:51px;padding:5px;border:1px solid #d4d4d4;border-bottom-right-radius:5px;border-top-right-radius:4px;line-height:1.5em;height:24px}

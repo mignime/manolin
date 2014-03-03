@@ -15,12 +15,14 @@ var myself;
 var tanqueSeleccionado;
 var precioTanque;
 var $messagesActive;
-var comboTanques, comboMedidores, vistaTanque, vistaMedidor, lecturaActual, gasto, calculoSurtido;
+var comboTanques, comboMedidores, vistaTanque, vistaMedidor, totalMedidores, lecturaActual, gasto, calculoSurtido;
+var countMedidores = 0, medidoresLeidos =- 0;
 // Init
 $(function() {
 	vistaMedidor = $("#vistaMedidor"); //vistaMedidor.hide();
 	comboTanques = $("#tanqueSelect");
-	comboMedidores = $("#medidorSelect");
+	divMedidores = $("#medidores");
+	totalMedidores = $("#totalMedidores"); totalMedidores.hide();
 	lecturaActual = $(".lecturaActual");
 	lecturaFinal = $(".lecturaFinal");
 	calculoSurtido = $("#calculoSurtido"); calculoSurtido.hide();
@@ -31,8 +33,9 @@ $(function() {
 
 function initEvents(){
 	lecturaFinal.attr('disabled',true);
-	comboMedidores.chosen({width: "100%"});
+	//comboMedidores.chosen({width: "100%"});
 	comboTanques.change(function(){
+		totalMedidores.hide();
 		llenaMedidores();
 		lecturaFinal.attr('disabled',true);
 		calculoSurtido.hide();
@@ -75,14 +78,37 @@ function initEvents(){
 }
 
 function llenaMedidores() {
-	comboMedidores.empty();
+	divMedidores.empty();
+	var snippetCalculoMedidor = "<span class='conversionLitros datos'></span>";
 	$.post('/obtenMedidores', {"claveTanque":comboTanques.val()},function(meds){
-		comboMedidores.append("<option value='-1'>----</option>");
 		$.each(meds,function(idx, med){
-			comboMedidores.append("<option value='"+med.clave+"'>"+med.clave+"</option>");
+			countMedidores++;
+			divMedidores.append("<div><label class='inputLabel'>"+med.clave+"</label><input class='entradaDatos datosMedidor "+med.clave+"' type='text' placeholder='mts.'/>"+snippetCalculoMedidor+"</div>");
 		});
-		comboMedidores.trigger("chosen:updated");
+		$(".datosMedidor").change(function(){
+				var conversion = $(this).val() * 4;
+				$(this).next(".conversionLitros").text(conversion+" lts.");
+				var conteo = lecturaMedidoresLista();
+				if (conteo.listo) {
+					totalMedidores.show();
+					$("#totalLitros").text(conteo.suma);
+				}
+			});
 	});
+}
+
+function lecturaMedidoresLista(){
+	var suma = 0;
+	var listo = true;
+	$.each($(".datosMedidor"), function(){
+		if ($(this).val().trim() == "") {
+			listo = false;
+			return false;
+		}
+		suma += parseInt($(this).next(".conversionLitros").text().substring(0, $(this).next(".conversionLitros").text().indexOf(" ")));
+	});
+	console.debug("SUAM ",suma);
+	return {'listo':listo, 'suma':suma};
 }
 
 function llenaCombo(){
