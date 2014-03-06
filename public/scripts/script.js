@@ -44,6 +44,7 @@ function initEvents(){
 		lecturaFinal.val("");
 		$.post("/descripcionTanque", {"clave":$(this).val()} ,function(datos){
 			tanqueSeleccionado = datos[0];
+			console.debug("negro ",tanqueSeleccionado);
 			var porcentaje = (tanqueSeleccionado.ultimaCarga * 100)/tanqueSeleccionado.capacidad;
 			$("#ultimaRecLts").text(tanqueSeleccionado.ultimaCarga+" lts.");
 			$("#ultimaRecPct").text(porcentaje+"%");
@@ -93,7 +94,14 @@ function llenaMedidores() {
 				var conteo = lecturaMedidoresLista();
 				if (conteo.listo) {
 					totalMedidores.show();
+					var subtotal = conteo.suma * precioTanque.precio;
+					var iva = subtotal * .15;
+					var total = iva + subtotal;
 					$("#totalLitros").text(conteo.suma);
+					$("#precioM").text(" $ "+precioTanque.precio+" ");
+					$("#subTotalM").text(" $ "+subtotal+" ");
+					$("#ivaM").text(" $ "+iva+" ");
+					$("#totalM").text(" $ "+total+" ");
 				}
 			});
 	});
@@ -119,8 +127,8 @@ function llenaCombo(){
 	$.post("/obtenTanques", function(datos){
 		comboTanques.append("<option value='-1'>----</option>");
 		$.each(datos,function(idx, tanq){
-			comboTanques.append("<option value='"+tanq.clave+"'>"+tanq.clave+"</option>");
-			console.debug("TANQUE ",tanq);
+			comboTanques.append("<option value='"+tanq.clave+"'>"+tanq.clave+" "+tanq.capacidad+" lts.</option>");
+			console.debug("TANQUE2 ",tanq);
 		});
 		$("#tanqueSelect").chosen({width: "100%"});
 	});

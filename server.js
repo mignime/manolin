@@ -26,7 +26,7 @@ app.post('/obtenTanques', function(req, res){
      if (err) throw err;
      db.collection('tanque', function(er,collection) {
       if (er) throw er;
-    collection.find({},{clave:1, _id:0}).toArray(function(err, docs) {
+    collection.find({},{clave:1, capacidad:1, _id:0}).toArray(function(err, docs) {
       console.log("LOSTANQWS ",docs);
       //res.writeHead(200, "OK", {'Content-Type': 'application/json'});
       res.send(docs);
