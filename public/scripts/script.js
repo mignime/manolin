@@ -107,7 +107,8 @@ function lecturaMedidoresLista(){
 			listo = false;
 			return false;
 		}
-		suma += parseInt($(this).next(".conversionLitros").text().substring(0, $(this).next(".conversionLitros").text().indexOf(" ")));
+		var ultimaL = $(this).siblings(".ultimaCargaMedidor").val();
+		suma += parseInt($(this).siblings(".conversionLitros").text().substring(0, $(this).siblings(".conversionLitros").text().indexOf(" ")));
 	});
 	console.debug("SUAM ",suma);
 	return {'listo':listo, 'suma':suma};
