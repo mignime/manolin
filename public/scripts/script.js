@@ -84,12 +84,12 @@ function llenaMedidores() {
 	$.post('/obtenMedidores', {"claveTanque":comboTanques.val()},function(meds){
 		$.each(meds,function(idx, med){
 			countMedidores++;
-			divMedidores.append("<div class='medidorBox'><label class='inputLabel'>"+med.clave+"</label><input class='entradaDatos datosMedidor "+med.clave+"' type='text' placeholder='mts.'/><label class='inputLabel'>Ultima lectura </label><input class='entradaDatos ultimaCargaMedidor' type='text' value='"+med.ultimaLectura+"' disabled/>"+snippetCalculoMedidor+"</div>");
+			divMedidores.append("<div class='medidorBox'><label class='inputLabel'>Ultima lectura </label><input class='entradaDatos ultimaCargaMedidor' type='text' value='"+med.ultimaLectura+"' disabled/><label class='inputLabel'>"+med.clave+"</label><input class='entradaDatos datosMedidor "+med.clave+"' type='text' placeholder='mts.'/>"+snippetCalculoMedidor+"</div>");
 		});
 		$(".datosMedidor").change(function(){
 			var ultimaLectura = $(this).siblings(".ultimaCargaMedidor").val();
 			console.debug("UL= ",ultimaLectura);
-				var conversion = (ultimaLectura - $(this).val()) * 4;
+				var conversion = ($(this).val() - ultimaLectura) * 4;
 				$(this).siblings(".conversionLitros").text(conversion+" lts.");
 				var conteo = lecturaMedidoresLista();
 				if (conteo.listo) {
@@ -125,8 +125,17 @@ function lecturaMedidoresLista(){
 function llenaCombo(){
 	comboTanques.empty();
 	$.post("/obtenTanques", function(datos){
+		console.debug("ADISO ",datos);
 		comboTanques.append("<option value='-1'>----</option>");
-		$.each(datos,function(idx, tanq){
+		$.each(datos.tanques,function(idx, tanq){
+			//Checar si están ligados mas tanques
+			if (tanq.esMultiple) {
+				$.each(datos.adicional, function(rxt, adi){
+					if (adi.unido == tanq.clave) {
+						
+					}
+				});
+			}
 			comboTanques.append("<option value='"+tanq.clave+"'>"+tanq.clave+" "+tanq.capacidad+" lts.</option>");
 			console.debug("TANQUE2 ",tanq);
 		});

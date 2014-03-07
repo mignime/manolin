@@ -18,6 +18,8 @@ app.configure(function() {
 console.log("TEST COMMENT");
 //- See more at: http://fernetjs.com/2012/08/buenos-amigos-nodejs-mongodb/#sthash.UuGDGxaJ.dpuf
 
+
+
 app.post('/obtenTanques', function(req, res){
   //dbTest.open(function (error, client) {
     //if (error) throw error;
@@ -26,15 +28,17 @@ app.post('/obtenTanques', function(req, res){
      if (err) throw err;
      db.collection('tanque', function(er,collection) {
       if (er) throw er;
-    collection.find({},{clave:1, capacidad:1, _id:0}).toArray(function(err, docs) {
+    collection.find({"unido":{$exists: false}},{clave:1, capacidad:1, esMultiple:1, _id:0}).toArray(function(err, docs) {
+      collection.find({"unido":{$exists: true}},{clave:1, capacidad:1, unido:1, _id:0}).toArray(function(err, adicionales) {
       console.log("LOSTANQWS ",docs);
       //res.writeHead(200, "OK", {'Content-Type': 'application/json'});
-      res.send(docs);
+      res.send({"tanques":docs,"adicionales":adicionales});
       //res.end();
     //imprimimos en la consola el resultado
       res.docs;
       db.close();
       //dbTest.close();
+      });
     });
   }); 
    }); 
