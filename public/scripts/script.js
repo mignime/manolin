@@ -26,7 +26,7 @@ $(function() {
 	lecturaActual = $(".lecturaActual");
 	lecturaFinal = $(".lecturaFinal");
 	calculoSurtido = $("#calculoSurtido"); calculoSurtido.hide();
-	gasto = $("#gasto"); gasto.hide();
+	gasto = $(".gasto"); gasto.hide();
 	initEvents();
 	llenaCombo();
 });
@@ -46,8 +46,8 @@ function initEvents(){
 			tanqueSeleccionado = datos[0];
 			console.debug("negro ",tanqueSeleccionado);
 			var porcentaje = (tanqueSeleccionado.ultimaCarga * 100)/tanqueSeleccionado.capacidad;
-			$("#ultimaRecLts").text(tanqueSeleccionado.ultimaCarga+" lts.");
-			$("#ultimaRecPct").text(porcentaje+"%");
+			$(".ultimaRecLts").text(tanqueSeleccionado.ultimaCarga+" lts.");
+			$(".ultimaRecPct").text(porcentaje+"%");
 			$.post("/precioTanque", {"clavePrecio":tanqueSeleccionado.clavePrecio} ,function(precio){
 				precioTanque = precio[0];
 				console.debug("PRECIO ",precioTanque.precio);
@@ -56,11 +56,11 @@ function initEvents(){
 	});
 	lecturaActual.change(function(){
 		var litrosActuales = ($(".lecturaActual").val()*tanqueSeleccionado.capacidad)/100;
-		var consumidos = ($("#ultimaRecLts").text().substring(0,$("#ultimaRecLts").text().indexOf(" "))-litrosActuales);
+		var consumidos = ($(".ultimaRecLts").text().substring(0,$(".ultimaRecLts").text().indexOf(" "))-litrosActuales);
 		var restantes = tanqueSeleccionado.ultimaCarga-consumidos;
-		$("#ltsConsumidos").text(" "+consumidos+" lts.");
-		$("#ltsRestantes").text(" "+restantes+" lts.");
-		$("#debeQuedar").text(" "+tanqueSeleccionado.debeQuedar+" %");
+		$(".ltsConsumidos").text(" "+consumidos+" lts.");
+		$(".ltsRestantes").text(" "+restantes+" lts.");
+		$(".debeQuedar").text(" "+tanqueSeleccionado.debeQuedar+" %");
 		gasto.show();
 		lecturaFinal.attr('disabled',false);
 	});
@@ -128,15 +128,16 @@ function llenaCombo(){
 		console.debug("ADISO ",datos);
 		comboTanques.append("<option value='-1'>----</option>");
 		$.each(datos.tanques,function(idx, tanq){
+			var capacidad = tanq.capacidad;
 			//Checar si están ligados mas tanques
 			if (tanq.esMultiple) {
-				$.each(datos.adicional, function(rxt, adi){
+				$.each(datos.adicionales, function(rxt, adi){
 					if (adi.unido == tanq.clave) {
-						
+						capacidad += adi.capacidad
 					}
 				});
 			}
-			comboTanques.append("<option value='"+tanq.clave+"'>"+tanq.clave+" "+tanq.capacidad+" lts.</option>");
+			comboTanques.append("<option value='"+tanq.clave+"'>"+tanq.clave+" "+capacidad+" lts.</option>");
 			console.debug("TANQUE2 ",tanq);
 		});
 		$("#tanqueSelect").chosen({width: "100%"});
