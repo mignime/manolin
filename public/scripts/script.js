@@ -17,13 +17,13 @@ var precioTanque;
 var $messagesActive;
 var comboTanques, comboMedidores, vistaTanque, vistaMedidor, totalMedidores, lecturaActual, gasto, calculoSurtido;
 var countMedidores = 0, medidoresLeidos =- 0;
+var adicionales;
 // Init
 $(function() {
 	vistaMedidor = $("#vistaMedidor"); //vistaMedidor.hide();
 	comboTanques = $("#tanqueSelect");
 	divMedidores = $("#medidores");
 	totalMedidores = $("#totalMedidores"); totalMedidores.hide();
-	lecturaActual = $(".lecturaActual");
 	lecturaFinal = $(".lecturaFinal");
 	calculoSurtido = $("#calculoSurtido"); calculoSurtido.hide();
 	gasto = $(".gasto"); gasto.hide();
@@ -40,30 +40,37 @@ function initEvents(){
 		lecturaFinal.attr('disabled',true);
 		calculoSurtido.hide();
 		gasto.hide();
-		lecturaActual.val("");
 		lecturaFinal.val("");
 		$.post("/descripcionTanque", {"clave":$(this).val()} ,function(datos){
+			
+			$("#tanques").empty();
 			tanqueSeleccionado = datos[0];
-			console.debug("negro ",tanqueSeleccionado);
-			var porcentaje = (tanqueSeleccionado.ultimaCarga * 100)/tanqueSeleccionado.capacidad;
-			$(".ultimaRecLts").text(tanqueSeleccionado.ultimaCarga+" lts.");
-			$(".ultimaRecPct").text(porcentaje+"%");
+
+			agregaTanque(tanqueSeleccionado);
+
+			if (tanqueSeleccionado.esMultiple) {
+				$.each(adicionales, function(idd, adi){
+					if (adi.unido == tanqueSeleccionado.clave) {
+						$.post("/descripcionTanque", {"clave":adi.clave} ,function(datosAd){
+							tanqueSeleccionado = datosAd[0];
+							agregaTanque(tanqueSeleccionado);
+						});
+					}
+				});
+			}
+
+			
+			
+			
 			$.post("/precioTanque", {"clavePrecio":tanqueSeleccionado.clavePrecio} ,function(precio){
 				precioTanque = precio[0];
 				console.debug("PRECIO ",precioTanque.precio);
 			});
 		});
 	});
-	lecturaActual.change(function(){
-		var litrosActuales = ($(".lecturaActual").val()*tanqueSeleccionado.capacidad)/100;
-		var consumidos = ($(".ultimaRecLts").text().substring(0,$(".ultimaRecLts").text().indexOf(" "))-litrosActuales);
-		var restantes = tanqueSeleccionado.ultimaCarga-consumidos;
-		$(".ltsConsumidos").text(" "+consumidos+" lts.");
-		$(".ltsRestantes").text(" "+restantes+" lts.");
-		$(".debeQuedar").text(" "+tanqueSeleccionado.debeQuedar+" %");
-		gasto.show();
-		lecturaFinal.attr('disabled',false);
-	});
+	
+
+	
 	lecturaFinal.change(function(){
 		var litrosSurtidos = (($(this).val()-$(".lecturaActual").val()) * tanqueSeleccionado.capacidad)/100;
 		var subtotal = litrosSurtidos * precioTanque.precio;
@@ -76,6 +83,52 @@ function initEvents(){
 		$("#total").text(" $ "+total+" ");
 		calculoSurtido.show();
 	});
+}
+
+function agregaTanque(tanque) {
+	
+	$(".lecturaActual").off('change');
+	$(".lecturaFinal").off('change');
+
+	var porcentaje = (tanqueSeleccionado.ultimaCarga * 100)/tanqueSeleccionado.capacidad;
+	var snipTanq = $("<div class='tanque'></div>").data("tanque", tanque);
+	var snipActual = "<div><label class='inputLabel'>Lectura Actual</label><input placeholder='xxx%' type='text' class='entradaDatos respuestas lecturaActual'/></div>";
+	var snipFinal = "<div><label class='inputLabel'>Lectura Final</label><input disabled placeholder='xxx%' type='text' class='entradaDatos respuestas lecturaFinal'/></div>";
+	var snipGasto = "<div class='gasto'><label>Consumido</label><span class='ltsConsumidos datos'></span><label>Restante</label><span class='ltsRestantes'></span><label>Debe quedar</label><span class='debeQuedar'></span></div>";
+	snipTanq.append("<span>"+tanqueSeleccionado.clave+"  -  "+tanqueSeleccionado.ultimaCarga+" lts  " + porcentaje+"%</span>");
+	snipTanq.append(snipActual);
+	snipTanq.append(snipFinal);
+	snipTanq.append(snipGasto);
+	$("#tanques").append(snipTanq);
+
+	$(".lecturaActual").on('change', function(){
+		var tanqueNow = $(this).parent().parent().data("tanque");
+		var divGasto = $(this).parent().parent().find(".gasto");
+		var litrosActuales = ($(this).val()*tanqueNow.capacidad)/100;
+		var consumidos = (tanqueSeleccionado.ultimaCarga-litrosActuales);
+		var restantes = tanqueNow.ultimaCarga-consumidos;
+		$(".ltsConsumidos", divGasto).text(" "+consumidos+" lts.");
+		$(".ltsRestantes", divGasto).text(" "+restantes+" lts.");
+		$(".debeQuedar", divGasto).text(" "+tanqueNow.debeQuedar+" %");
+				
+		divGasto.show();
+		$(this).parent().parent().find(".lecturaFinal").attr('disabled',false);
+		lecturaTanquesLista();
+	});
+
+	$(".lecturaFinal").on('change', function(){
+		var litrosSurtidos = (($(this).val()-$(".lecturaActual").val()) * tanqueSeleccionado.capacidad)/100;
+		var subtotal = litrosSurtidos * precioTanque.precio;
+		var iva = subtotal * .15;
+		var total = subtotal + iva
+		$("#litrosSurtidos").text(" "+litrosSurtidos+" lts.");
+		$("#precio").text(" $ "+precioTanque.precio+" ");
+		$("#subTotal").text(" $ "+subtotal+" ");
+		$("#iva").text(" $ "+iva+" ");
+		$("#total").text(" $ "+total+" ");
+		calculoSurtido.show();
+	});
+	$(".gasto").hide();
 }
 
 function llenaMedidores() {
@@ -107,6 +160,19 @@ function llenaMedidores() {
 	});
 }
 
+function lecturaTanquesLista(){
+	var listo = true;
+	var suma = 0;
+	$.each($(".lecturaActual"), function(){
+		if ($(this).val().trim() == "") {
+			listo = false;
+			return false;
+		}
+		suma += 1;
+	});
+	return {'listo':listo, 'suma':suma};
+}
+
 function lecturaMedidoresLista(){
 	var suma = 0;
 	var listo = true;
@@ -118,7 +184,6 @@ function lecturaMedidoresLista(){
 		var ultimaL = $(this).siblings(".ultimaCargaMedidor").val();
 		suma += parseInt($(this).siblings(".conversionLitros").text().substring(0, $(this).siblings(".conversionLitros").text().indexOf(" ")));
 	});
-	console.debug("SUAM ",suma);
 	return {'listo':listo, 'suma':suma};
 }
 
@@ -129,6 +194,7 @@ function llenaCombo(){
 		comboTanques.append("<option value='-1'>----</option>");
 		$.each(datos.tanques,function(idx, tanq){
 			var capacidad = tanq.capacidad;
+			adicionales = datos.adicionales;
 			//Checar si están ligados mas tanques
 			if (tanq.esMultiple) {
 				$.each(datos.adicionales, function(rxt, adi){

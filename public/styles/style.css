@@ -2,7 +2,9 @@ html,body{margin:0;padding:0;font-family:Helvetica}
 p,li,div,input,label,a,ul{margin:0;padding:0}
 body{background:url("../bg.png") repeat}
 span{font-weight:bold;color:#444;margin-left:10px}
+div#tanques{margin-top:20px}
 div#medidores{margin-top:65px}
+div.tanque{margin-top:15px}
 div.vista{width:350px;float:left}
 div.medidorBox{margin-bottom:5px}
 div.titulo{font-size:22px;font-weight:bold;color:#444;text-align:center}
